@@ -69,6 +69,13 @@
             },
             "defaultValue": "Standard_A2"
         },
+        "createAvailabilitySet": {
+          "type": "bool",
+          "metadata": {
+            "description": "Whether to create a new availability set for the VMs"
+          },
+          "defaultValue": false
+        },        
         "enableAcceleratedNetworking": {
             "type": "bool",
             "metadata": {
@@ -222,7 +229,10 @@
         "nsgId": "[if(parameters('createNetworkSecurityGroup'), resourceId('Microsoft.Network/networkSecurityGroups', variables('newNsgName')), parameters('networkSecurityGroupId'))]",
         "isVMAdminAccountCredentialsProvided": "[and(not(equals(parameters('vmAdministratorAccountUsername'), '')), not(equals(parameters('vmAdministratorAccountPassword'), '')))]",
         "vmAdministratorUsername": "[if(variables('isVMAdminAccountCredentialsProvided'), parameters('vmAdministratorAccountUsername'), first(split(parameters('administratorAccountUsername'), '@')))]",
-        "vmAdministratorPassword": "[if(variables('isVMAdminAccountCredentialsProvided'), parameters('vmAdministratorAccountPassword'), parameters('administratorAccountPassword'))]"
+        "vmAdministratorPassword": "[if(variables('isVMAdminAccountCredentialsProvided'), parameters('vmAdministratorAccountPassword'), parameters('administratorAccountPassword'))]",
+        "vmAvailabilitySetResourceId": {
+            "id": "[resourceId('Microsoft.Compute/availabilitySets/', concat(parameters('rdshPrefix'), 'availabilitySet-', parameters('location')))]"
+        }
     },
     "resources": [
         {
@@ -297,9 +307,7 @@
                 "hardwareProfile": {
                     "vmSize": "[parameters('rdshVmSize')]"
                 },
-                "availabilitySet": {
-                    "id": ""
-                },
+                "availabilitySet": "[if(parameters('createAvailabilitySet'), variables('vmAvailabilitySetResourceId'), json('null'))]",
                 "osProfile": {
                     "computerName": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')))]",
                     "adminUsername": "[variables('vmAdministratorUsername')]",
