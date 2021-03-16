@@ -590,6 +590,9 @@
           "rdshVmSize": {
             "value": "[parameters('vmSize')]"
           },
+          "createAvailabilitySet": {
+            "value": "[parameters('createAvailabilitySet')]"
+          },            
           "enableAcceleratedNetworking": {
             "value": false
           },
