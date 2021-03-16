@@ -302,7 +302,7 @@
             "type": "Microsoft.Compute/virtualMachines",
             "name": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')))]",
             "location": "[parameters('location')]",
-            "zones": ["[add(1,mod(copyIndex(),3))]"],
+            "zones": ["[if(parameters('useAvailabilityZones'), add(1,mod(copyIndex(),3)), variables('emptyArray'))]"],
             "tags": "[parameters('virtualMachineTags')]",
             "copy": {
                 "name": "rdsh-vm-loop",
