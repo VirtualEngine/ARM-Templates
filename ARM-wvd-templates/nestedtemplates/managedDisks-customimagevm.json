@@ -69,6 +69,13 @@
             },
             "defaultValue": "Standard_A2"
         },
+        "useAvailabilityZones": {
+          "type": "bool",
+          "metadata": {
+            "description": "Whether to use availability zones the VMs"
+          },
+          "defaultValue": true
+        },         
         "createAvailabilitySet": {
           "type": "bool",
           "metadata": {
@@ -223,6 +230,7 @@
         }
     },
     "variables": {
+        "emptyArray": [],
         "domain": "[if(equals(parameters('domain'), ''), last(split(parameters('administratorAccountUsername'), '@')), parameters('domain'))]",
         "storageAccountType": "[parameters('rdshVMDiskType')]",
         "newNsgName": "[concat(parameters('rdshPrefix'), 'nsg-', parameters('_guidValue'))]",
@@ -294,7 +302,7 @@
             "type": "Microsoft.Compute/virtualMachines",
             "name": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')))]",
             "location": "[parameters('location')]",
-            "zones": ["[add(1,mod(copyIndex(),3))]"],
+            "zones": "[if(parameters('useAvailabilityZones'), add(1,mod(copyIndex(),3)), variables('emptyArray'))]",
             "tags": "[parameters('virtualMachineTags')]",
             "copy": {
                 "name": "rdsh-vm-loop",
