@@ -104,6 +104,13 @@
       },
       "defaultValue": ""
     },
+    "useAvailabilityZones": {
+      "type": "bool",
+      "metadata": {
+        "description": "Whether to use availability zones for the VMs"
+      },
+      "defaultValue": true
+    },    
     "createAvailabilitySet": {
       "type": "bool",
       "metadata": {
@@ -590,6 +597,9 @@
           "rdshVmSize": {
             "value": "[parameters('vmSize')]"
           },
+          "useAvailabilityZones": {
+            "value": "[parameters('useAvailabilityZones')]"
+          },          
           "createAvailabilitySet": {
             "value": "[parameters('createAvailabilitySet')]"
           },            
